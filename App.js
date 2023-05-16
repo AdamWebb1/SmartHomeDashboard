@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import windowIcon from './assets/img/window.png'
+import Window from './Window';
 
 export default function App() {
-
+  
   {/* 
       _____________________________
       |       My Dashboard        |
@@ -31,8 +33,12 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.title}>My Dashboard</Text>
       <View style={styles.list}>
-        <Text style={styles.subtitle}>Windows</Text>
-        <View style={styles.window}></View>
+        <Text>
+          <Text style={styles.subtitle}>Windows</Text>
+          <Window windowName="Window1" image={windowIcon}/>
+          
+        </Text>
+        
       </View>
 
       
@@ -58,6 +64,10 @@ const styles = StyleSheet.create({
   title: {
     paddingTop: "10%",
     fontSize: 30
+  },
+
+  windowIcon: {
+    
   }
   
 });
