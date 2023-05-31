@@ -1,11 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import openWindow from "./open_window.png"
+
+import Window from './WindowIcon';
 
 function App() {
   return (
     <div className="App">
-      <image src={openWindow} alt={"Nope, u thought"}/>
+      <Window/>
     </div>
   );
 }
