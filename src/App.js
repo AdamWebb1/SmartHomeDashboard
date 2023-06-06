@@ -8,33 +8,61 @@ import Water from './Sensors/Water';
 function App() {
 
   const [authKey, setAuthKey] = useState(0)
-  getInitialAuthKey()
-  const [sensorData, setSensorData] = useState(() => getSensorData(authKey))
+  const [sensorData, setSensorData] = useState(0)
 
-  function getInitialAuthKey(){
-    let authKey
-    
+  function getSensorData(){
+      if (authKey == 0){
+
+        fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/auth",
+        {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username: "123456",
+            password: "password"
+          })
+        })
+        .then(resp=> resp.text())
+        .then(key=> {
+
+          let token = JSON.parse(key)["token"]
+          setAuthKey(token)
+          fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/get",
+            {
+              method: "POST",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                token: {authKey},
+              })
+            })
+          .then(resp=> resp)
+          .then(data=> console.log(data))
+          
+        })
+      }
+      else {
+        fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/get",
+            {
+              method: "POST",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                token: {authKey},
+              })
+            })
+          .then(resp=> resp)
+          .then(data=> console.log(data))
+      }
   }
-
-  function getSensorData(authKey){
-    // if (authKey == 0){
-    //   fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/auth",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       username: "123456",
-    //       password: "password"
-    //     })
-    //   })
-    //   .then(resp=> resp.text())
-    //   .then(key=> {
-    //     let token = JSON.parse(key)["token"]
-    //     console.log(token)
-    //     fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/get",
+    // fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/get",
     //       {
     //         method: "POST",
     //         headers: {
@@ -42,27 +70,11 @@ function App() {
     //           "Content-Type": "application/json"
     //         },
     //         body: JSON.stringify({
-    //           token: {token},
+    //           token: "SHZLMKJNMT",
     //         })
     //       })
     //     .then(resp=> resp)
     //     .then(data=> console.log(data))
-        
-    //   })
-  }
-    fetch("https://z6my0pr9u3.execute-api.us-west-1.amazonaws.com/prod/get",
-          {
-            method: "POST",
-            headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: "SHZLMKJNMT",
-            })
-          })
-        .then(resp=> resp)
-        .then(data=> console.log(data))
     
   
 
@@ -75,7 +87,8 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={refreshSensorData}>Click me</button>
+      <div>{">" + sensorData + "<"}</div>
+      <button onClick={getSensorData}>Get Sensor data</button>
     </div>
   );
 }
